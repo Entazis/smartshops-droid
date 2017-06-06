@@ -40,5 +40,14 @@
                 android:theme="@style/AppOverlayTheme"
                 android:label="@string/simple_scanner_fragment_activity">
         </activity>
+
+        <activity android:name=".SimpleReaderActivity"
+          android:theme="@style/AppOverlayTheme"
+          android:uiOptions="splitActionBarWhenNarrow"
+          android:label="@string/simple_reader_activity">
+          <meta-data android:name="android.support.UI_OPTIONS"
+              android:value="splitActionBarWhenNarrow" />
+        </activity>
+
     </application>
 </manifest>

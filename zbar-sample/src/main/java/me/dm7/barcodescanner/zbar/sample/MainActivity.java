@@ -27,6 +27,10 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
     }
 
+    public void launchReaderActivity(View v){
+        launchActivity(SimpleReaderActivity.class);
+    }
+
     public void launchSimpleActivity(View v) {
         launchActivity(SimpleScannerActivity.class);
     }
