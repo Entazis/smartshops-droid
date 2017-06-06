@@ -11,6 +11,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.ViewGroup;
+import android.widget.EditText;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,6 +32,7 @@ public class FullScannerActivity extends BaseScannerActivity implements MessageD
     private boolean mAutoFocus;
     private ArrayList<Integer> mSelectedIndices;
     private int mCameraId = -1;
+    private EditText mProductName;
 
     @Override
     public void onCreate(Bundle state) {
@@ -145,6 +147,8 @@ public class FullScannerActivity extends BaseScannerActivity implements MessageD
             r.play();
         } catch (Exception e) {}
         showMessageDialog("Contents = " + rawResult.getContents() + ", Format = " + rawResult.getBarcodeFormat().getName());
+        //FIXME: user input
+        //mProductName = (EditText) findViewById(R.id.)
     }
 
     public void showMessageDialog(String message) {
