@@ -31,6 +31,8 @@ public class MainActivity extends AppCompatActivity {
         launchActivity(SimpleReaderActivity.class);
     }
 
+    public void launchAuthenticationActivity(View v){launchActivity(AuthenticationActivity.class);}
+
     public void launchSimpleActivity(View v) {
         launchActivity(SimpleScannerActivity.class);
     }

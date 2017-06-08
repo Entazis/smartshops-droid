@@ -22,6 +22,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center">
+
         <Button android:layout_height="wrap_content"
                 android:layout_width="match_parent"
                 android:text="@string/simple_activity_sample"
@@ -39,8 +40,15 @@
                 android:text="@string/fragment_sample"
                 android:onClick="launchFullFragmentActivity" />
         <Button android:layout_height="wrap_content"
-            android:layout_width="match_parent"
-            android:text="@string/simple_reader_activity_sample"
-            android:onClick="launchReaderActivity" />
+                android:layout_width="match_parent"
+                android:text="@string/simple_reader_activity_sample"
+                android:onClick="launchReaderActivity" />
+        <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Log in"
+                android:onClick="launchAuthenticationActivity"/>
+
     </LinearLayout>
+
 </LinearLayout>

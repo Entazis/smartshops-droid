@@ -49,5 +49,10 @@
               android:value="splitActionBarWhenNarrow" />
         </activity>
 
+        <activity android:name=".AuthenticationActivity"
+                android:theme="@style/AppOverlayTheme"
+                android:label="@string/authentication_activity">
+        </activity>
+
     </application>
 </manifest>

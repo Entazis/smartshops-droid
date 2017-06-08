@@ -14,6 +14,8 @@
     <string name="activity_sample">Full Activity Sample</string>
     <string name="fragment_sample">Full Fragment Sample</string>
 
+    <string name="authentication_activity">Authentication Activity Sample</string>
+
     <string name="toggle_flash">Flash</string>
     <string name="flash_on">Flash [ON]</string>
     <string name="flash_off">Flash [OFF]</string>

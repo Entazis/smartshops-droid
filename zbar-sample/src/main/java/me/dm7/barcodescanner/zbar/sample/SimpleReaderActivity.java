@@ -1,10 +1,13 @@
 package me.dm7.barcodescanner.zbar.sample;
 
+import android.app.DownloadManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
+
+import org.json.JSONObject;
 
 import me.dm7.barcodescanner.zbar.Result;
 import me.dm7.barcodescanner.zbar.ZBarScannerView;
@@ -16,11 +19,14 @@ import me.dm7.barcodescanner.zbar.ZBarScannerView;
 public class SimpleReaderActivity extends BaseScannerActivity implements ZBarScannerView.ResultHandler {
     private ZBarScannerView mScannerView;
     private String mProductName;
+    private String mProductBrand;
+    private String mProductType;
     private String mBarcode;
     private String mBarcodeFormat;
     private String mProductPrice;
     private static final String FLASH_STATE = "FLASH_STATE";
     private boolean mFlash;
+    //JsonObjectRequest jsObjRequest;
 
 
     @Override
@@ -61,9 +67,30 @@ public class SimpleReaderActivity extends BaseScannerActivity implements ZBarSca
         mBarcodeFormat = rawResult.getBarcodeFormat().toString();
 
         //FIXME: product name, price request from the database
-        //mProductName =
-        //mProductPrice =
 
+        String url = "elodani.tk:5000/demo";
+
+        /*
+        jsObjRequest = new JsonObjectRequest
+                (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
+
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        //mProductName =
+                        //mProductBrand =
+                        //mProductType =
+                        //mProductPrice =
+                        //TODO response kiírása
+                    }
+                }, new Response.ErrorListener() {
+
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        // TODO Auto-generated method stub
+
+                    }
+                });
+        */
         Toast.makeText(this, "Product name = " + mProductName + ", Price = " + mProductPrice +
                 ", Barcode = " + mBarcode + ", Barcode Format = " + mBarcodeFormat, Toast.LENGTH_LONG).show();
 

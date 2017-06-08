@@ -17,6 +17,8 @@ import me.dm7.barcodescanner.zbar.ZBarScannerView;
 public class SimpleScannerActivity extends BaseScannerActivity implements ZBarScannerView.ResultHandler {
     private ZBarScannerView mScannerView;
     private String mProductName;
+    private String mProductBrand;
+    private String mProductType;
     private String mBarcode;
     private String mBarcodeFormat;
     private String mProductPrice;
@@ -43,10 +45,21 @@ public class SimpleScannerActivity extends BaseScannerActivity implements ZBarSc
         input.setInputType(InputType.TYPE_CLASS_TEXT);
         input.setHint("Product name");
         layout.addView(input);
+
         final EditText input2 = new EditText(SimpleScannerActivity.this);
-        input2.setInputType(InputType.TYPE_CLASS_NUMBER);
-        input2.setHint("Product price");
+        input2.setInputType(InputType.TYPE_CLASS_TEXT);
+        input2.setHint("Product brand");
         layout.addView(input2);
+
+        final EditText input3 = new EditText(SimpleScannerActivity.this);
+        input3.setInputType(InputType.TYPE_CLASS_TEXT);
+        input3.setHint("Product type");
+        layout.addView(input3);
+
+        final EditText input4 = new EditText(SimpleScannerActivity.this);
+        input4.setInputType(InputType.TYPE_CLASS_NUMBER);
+        input4.setHint("Product price");
+        layout.addView(input4);
 
         builder = new AlertDialog.Builder(SimpleScannerActivity.this);
         builder.setTitle("Product Creator");
@@ -57,9 +70,17 @@ public class SimpleScannerActivity extends BaseScannerActivity implements ZBarSc
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 mProductName = input.getText().toString();
-                mProductPrice = input2.getText().toString();
-                toast = Toast.makeText(getApplicationContext(), "Product = " + mProductName + ", Barcode = " + mBarcode + ", Price = " + mProductPrice, Toast.LENGTH_SHORT);
+                mProductBrand = input2.getText().toString();
+                mProductType = input3.getText().toString();
+                mProductPrice = input4.getText().toString();
+                toast = Toast.makeText(getApplicationContext(),
+                        "Name = " + mProductName +
+                                ", Brand = " + mProductBrand +
+                                ", Type = " + mProductType +
+                                ", Barcode = " + mBarcode +
+                                ", Price = " + mProductPrice, Toast.LENGTH_LONG);
                 toast.show();
+
                 dialog.dismiss();
             }
         });
