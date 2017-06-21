@@ -3,14 +3,28 @@ package me.dm7.barcodescanner.zbar.sample;
 import android.app.DownloadManager;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+
 import me.dm7.barcodescanner.zbar.Result;
 import me.dm7.barcodescanner.zbar.ZBarScannerView;
+import me.dm7.barcodescanner.zbar.sample.Product;
+
 
 /**
  * Created by Entazis on 2017. 06. 05..
@@ -18,15 +32,26 @@ import me.dm7.barcodescanner.zbar.ZBarScannerView;
 
 public class SimpleReaderActivity extends BaseScannerActivity implements ZBarScannerView.ResultHandler {
     private ZBarScannerView mScannerView;
+
+    //FIXME
+    private Product mProduct;
+    private ArrayList<Product> mProductList;
+
     private String mProductName;
     private String mProductBrand;
     private String mProductType;
     private String mBarcode;
     private String mBarcodeFormat;
     private String mProductPrice;
+    private int mProductAmount;
+
     private static final String FLASH_STATE = "FLASH_STATE";
     private boolean mFlash;
-    //JsonObjectRequest jsObjRequest;
+    JsonObjectRequest getRequest;
+    StringRequest stringRequest;
+    RequestQueue queue;
+    String url;
+    TextView productListView;
 
 
     @Override
@@ -37,6 +62,11 @@ public class SimpleReaderActivity extends BaseScannerActivity implements ZBarSca
         ViewGroup contentFrame = (ViewGroup) findViewById(R.id.content_frame);
         mScannerView = new ZBarScannerView(this);
         contentFrame.addView(mScannerView);
+
+        productListView = (TextView) findViewById(R.id.product_list);
+
+        queue = Volley.newRequestQueue(this);
+        url = "http://elodani.tk:5000/demo";
 
     }
 
@@ -65,34 +95,37 @@ public class SimpleReaderActivity extends BaseScannerActivity implements ZBarSca
 
         mBarcode = rawResult.getContents();
         mBarcodeFormat = rawResult.getBarcodeFormat().toString();
+        url = "http://elodani.tk:5000/scan/annakrisz/proba-barcode-01";
 
-        //FIXME: product name, price request from the database
-
-        String url = "elodani.tk:5000/demo";
-
-        /*
-        jsObjRequest = new JsonObjectRequest
+        getRequest = new JsonObjectRequest
                 (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
 
                     @Override
                     public void onResponse(JSONObject response) {
-                        //mProductName =
-                        //mProductBrand =
-                        //mProductType =
-                        //mProductPrice =
-                        //TODO response kiírása
+                        mProduct = new Product();
+                        mProduct.setAmount();
+                        mProduct.setBarcode(mBarcode);
+                        mProduct.setProductName(response.optString("name"));
+                        mProduct.setProductBrand(response.optString("brand"));
+                        mProduct.setProductType(response.optString("type"));
+                        mProduct.setProductPrice(response.optString("price"));
+                        mProductList.add(mProduct);
+                        Toast.makeText(SimpleReaderActivity.this, response.toString(), Toast.LENGTH_SHORT).show();
+                        Log.d("Response", response.toString());
                     }
                 }, new Response.ErrorListener() {
 
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         // TODO Auto-generated method stub
-
+                        Toast.makeText(SimpleReaderActivity.this, "Request did not work!", Toast.LENGTH_SHORT).show();
+                        Log.d("Error.Response", error.getMessage());
                     }
                 });
-        */
-        Toast.makeText(this, "Product name = " + mProductName + ", Price = " + mProductPrice +
-                ", Barcode = " + mBarcode + ", Barcode Format = " + mBarcodeFormat, Toast.LENGTH_LONG).show();
+
+        queue.add(getRequest);
+
+        //FIXME: refresh listview
 
         // Note:
         // * Wait 2 seconds to resume the preview.
@@ -110,5 +143,19 @@ public class SimpleReaderActivity extends BaseScannerActivity implements ZBarSca
     public void toggleFlash(View v) {
         mFlash = !mFlash;
         mScannerView.setFlash(mFlash);
+    }
+
+    public void clearReader(View v){
+        mProductList = null;
+    }
+
+    public void refreshListview(){
+        if(mProductList.isEmpty()){
+            //productListView.setText();
+        }
+        else{
+            //productListView.append();
+        }
+
     }
 }

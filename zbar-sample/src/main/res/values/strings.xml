@@ -15,6 +15,7 @@
     <string name="fragment_sample">Full Fragment Sample</string>
 
     <string name="authentication_activity">Authentication Activity Sample</string>
+    <string name="product_properties_activity">Product Properties Activity Sample</string>
 
     <string name="toggle_flash">Flash</string>
     <string name="flash_on">Flash [ON]</string>
@@ -26,4 +27,5 @@
     <string name="select_camera">Select a Camera</string>
     <string name="ok_button">OK</string>
     <string name="cancel_button">Cancel</string>
+    <string name="clear_reader">Clear</string>
 </resources>

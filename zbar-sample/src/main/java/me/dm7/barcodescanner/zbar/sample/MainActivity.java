@@ -27,6 +27,8 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
     }
 
+    public void launchProductPropertiesActivity(View v){launchActivity(ProductPropertiesActivity.class);}
+
     public void launchReaderActivity(View v){
         launchActivity(SimpleReaderActivity.class);
     }

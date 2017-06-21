@@ -1,1 +1,1 @@
-include "core", "zbar", "zbar-sample"
+include "core", "zbar", "zbar-sample", ":volley"

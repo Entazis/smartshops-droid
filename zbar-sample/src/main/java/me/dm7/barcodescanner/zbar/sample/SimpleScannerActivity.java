@@ -5,11 +5,26 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.InputType;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Toast;
+
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import me.dm7.barcodescanner.zbar.Result;
 import me.dm7.barcodescanner.zbar.ZBarScannerView;
@@ -22,12 +37,18 @@ public class SimpleScannerActivity extends BaseScannerActivity implements ZBarSc
     private String mBarcode;
     private String mBarcodeFormat;
     private String mProductPrice;
+    private Product mProduct;
     private static final String FLASH_STATE = "FLASH_STATE";
     private boolean mFlash;
     LinearLayout layout;
     AlertDialog.Builder builder;
     Toast toast;
     AlertDialog alertproduct;
+    RequestQueue queue;
+    //StringRequest postRequest;
+    JsonObjectRequest postRequest;
+    JSONObject postObject;
+    String url;
 
     @Override
     public void onCreate(Bundle state) {
@@ -38,6 +59,9 @@ public class SimpleScannerActivity extends BaseScannerActivity implements ZBarSc
         ViewGroup contentFrame = (ViewGroup) findViewById(R.id.content_frame);
         mScannerView = new ZBarScannerView(this);
         contentFrame.addView(mScannerView);
+
+        queue = Volley.newRequestQueue(this);
+        url = "http://elodani.tk:5000/demo";
 
         layout = new LinearLayout(SimpleScannerActivity.this);
         layout.setOrientation(LinearLayout.VERTICAL);
@@ -69,18 +93,56 @@ public class SimpleScannerActivity extends BaseScannerActivity implements ZBarSc
         builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                mProductName = input.getText().toString();
-                mProductBrand = input2.getText().toString();
-                mProductType = input3.getText().toString();
-                mProductPrice = input4.getText().toString();
+                mProduct.setProductName(input.getText().toString());
+                mProduct.setProductBrand(input2.getText().toString());
+                mProduct.setProductType(input3.getText().toString());
+                mProduct.setProductPrice(input4.getText().toString());
+                mProduct.setAmount();
+                //mProduct.setBarcode();
                 toast = Toast.makeText(getApplicationContext(),
-                        "Name = " + mProductName +
-                                ", Brand = " + mProductBrand +
-                                ", Type = " + mProductType +
-                                ", Barcode = " + mBarcode +
-                                ", Price = " + mProductPrice, Toast.LENGTH_LONG);
+                        "Name = " + mProduct.getProductName() +
+                                ", Brand = " + mProduct.getProductBrand() +
+                                ", Type = " + mProduct.getProductType() +
+                                ", Barcode = " + mProduct.getBarcode() +
+                                ", Price = " + mProduct.getProductPrice(), Toast.LENGTH_LONG);
                 toast.show();
 
+                //TODO: url
+                url = "http://elodani.tk:5000/demo";
+
+                postObject = new JSONObject();
+                try{
+                    postObject.put("name", mProduct.getProductName());
+                    postObject.put("brand", mProduct.getProductBrand());
+                    postObject.put("type", mProduct.getProductType());
+                    postObject.put("price", mProduct.getProductPrice());
+                    postObject.put("amount", mProduct.getAmount());
+                    postObject.put("barcode", mProduct.getBarcode());
+                } catch(JSONException e){
+                    e.printStackTrace();
+                }
+
+                postRequest = new JsonObjectRequest(Request.Method.POST, url, postObject,
+                        new Response.Listener<JSONObject>()
+                        {
+                            @Override
+                            public void onResponse(JSONObject response) {
+                                // response
+                                Toast.makeText(SimpleScannerActivity.this, response.toString(), Toast.LENGTH_SHORT).show();
+                                Log.d("Response", response.toString());
+                            }
+                        },
+                        new Response.ErrorListener()
+                        {
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+                                // error
+                                Toast.makeText(SimpleScannerActivity.this, error.toString(), Toast.LENGTH_SHORT).show();
+                                Log.d("Error.Response", error.getMessage());
+                            }
+                        }
+                );
+                queue.add(postRequest);
                 dialog.dismiss();
             }
         });
@@ -90,7 +152,6 @@ public class SimpleScannerActivity extends BaseScannerActivity implements ZBarSc
                 dialog.cancel();
             }
         });
-
         alertproduct = builder.create();
 
     }

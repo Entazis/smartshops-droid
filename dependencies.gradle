@@ -15,5 +15,5 @@ ext.libraries = [
         zxing_core          : "com.google.zxing:core:$versions.zxing",
         barcodescanner_core : "me.dm7.barcodescanner:core:$versions.barcodescanner",
         barcodescanner_zbar : "me.dm7.barcodescanner:zbar:$versions.barcodescanner",
-        barcodescanner_zxing: "me.dm7.barcodescanner:zxing:$versions.barcodescanner"
+        barcodescanner_zxing: "me.dm7.barcodescanner:zxing:$versions.barcodescanner",
 ]

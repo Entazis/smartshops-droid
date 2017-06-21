@@ -48,6 +48,11 @@
                 android:layout_height="wrap_content"
                 android:text="Log in"
                 android:onClick="launchAuthenticationActivity"/>
+        <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Product properties"
+                android:onClick="launchProductPropertiesActivity"/>
 
     </LinearLayout>
 
