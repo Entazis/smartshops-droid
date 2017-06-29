@@ -37,6 +37,9 @@ public class Product {
     public void setBarcode(String barcode){
         Barcode = barcode;
     }
+    public void setBarcode(){
+        Barcode = "0";
+    }
     public String getBarcode(){
         return Barcode;
     }

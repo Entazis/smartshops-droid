@@ -20,7 +20,6 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.HashMap;
@@ -31,15 +30,15 @@ import me.dm7.barcodescanner.zbar.ZBarScannerView;
 
 public class SimpleScannerActivity extends BaseScannerActivity implements ZBarScannerView.ResultHandler {
     private ZBarScannerView mScannerView;
-    private String mProductName;
-    private String mProductBrand;
-    private String mProductType;
-    private String mBarcode;
-    private String mBarcodeFormat;
-    private String mProductPrice;
-    private Product mProduct;
-    private static final String FLASH_STATE = "FLASH_STATE";
-    private boolean mFlash;
+    public String mProductName;
+    public String mProductBrand;
+    public String mProductType;
+    public String mBarcode;
+    public String mBarcodeFormat;
+    public String mProductPrice;
+    public Product mProduct;
+    public static final String FLASH_STATE = "FLASH_STATE";
+    public boolean mFlash;
     LinearLayout layout;
     AlertDialog.Builder builder;
     Toast toast;
@@ -93,10 +92,16 @@ public class SimpleScannerActivity extends BaseScannerActivity implements ZBarSc
         builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                mProduct.setProductName(input.getText().toString());
-                mProduct.setProductBrand(input2.getText().toString());
-                mProduct.setProductType(input3.getText().toString());
-                mProduct.setProductPrice(input4.getText().toString());
+                mProductName = input.getText().toString();
+                mProductBrand = input2.getText().toString();
+                mProductType = input3.getText().toString();
+                mProductPrice = input4.getText().toString();
+                mProduct = new Product();
+                mProduct.setBarcode(mBarcode);
+                mProduct.setProductName(mProductName);
+                mProduct.setProductBrand(mProductBrand);
+                mProduct.setProductType(mProductType);
+                mProduct.setProductPrice(mProductPrice);
                 mProduct.setAmount();
                 //mProduct.setBarcode();
                 toast = Toast.makeText(getApplicationContext(),
@@ -108,8 +113,9 @@ public class SimpleScannerActivity extends BaseScannerActivity implements ZBarSc
                 toast.show();
 
                 //TODO: url
-                url = "http://elodani.tk:5000/demo";
+                url = "http://elodani.tk:5000/add/annakrisz";
 
+                /*
                 postObject = new JSONObject();
                 try{
                     postObject.put("name", mProduct.getProductName());
@@ -121,7 +127,8 @@ public class SimpleScannerActivity extends BaseScannerActivity implements ZBarSc
                 } catch(JSONException e){
                     e.printStackTrace();
                 }
-
+                */
+/*
                 postRequest = new JsonObjectRequest(Request.Method.POST, url, postObject,
                         new Response.Listener<JSONObject>()
                         {
@@ -142,7 +149,44 @@ public class SimpleScannerActivity extends BaseScannerActivity implements ZBarSc
                             }
                         }
                 );
-                queue.add(postRequest);
+                queue.add(postRequest);*/
+
+                StringRequest postStringRequest = new StringRequest(Request.Method.POST, url,
+                        new Response.Listener<String>()
+                        {
+                            @Override
+                            public void onResponse(String response) {
+                                // response
+                                Log.d("Response", response);
+                                Toast.makeText(SimpleScannerActivity.this, response.toString(), Toast.LENGTH_SHORT).show();
+                            }
+                        },
+                        new Response.ErrorListener()
+                        {
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+                                // error
+                                Toast.makeText(SimpleScannerActivity.this, error.toString(), Toast.LENGTH_SHORT).show();
+                                Log.d("Error.Response", error.getMessage());
+                            }
+                        }
+                ) {
+                    @Override
+                    protected Map<String, String> getParams()
+                    {
+                        Map<String, String>  params = new HashMap<String, String>();
+
+                        params.put("barcode", mProduct.getBarcode());
+                        params.put("name", mProduct.getProductName());
+                        params.put("brand", mProduct.getProductBrand());
+                        params.put("cost", mProduct.getProductPrice());
+                        params.put("type", mProduct.getProductType());
+                        params.put("user", "1");
+
+                        return params;
+                    }
+                };
+                queue.add(postStringRequest);
                 dialog.dismiss();
             }
         });

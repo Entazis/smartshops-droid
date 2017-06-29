@@ -1,6 +1,5 @@
 package me.dm7.barcodescanner.zbar.sample;
 
-import android.app.DownloadManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -23,7 +22,6 @@ import java.util.ArrayList;
 
 import me.dm7.barcodescanner.zbar.Result;
 import me.dm7.barcodescanner.zbar.ZBarScannerView;
-import me.dm7.barcodescanner.zbar.sample.Product;
 
 
 /**
@@ -35,7 +33,8 @@ public class SimpleReaderActivity extends BaseScannerActivity implements ZBarSca
 
     //FIXME
     private Product mProduct;
-    private ArrayList<Product> mProductList;
+    private ArrayList<Product> mProductList = new ArrayList<Product>();;
+    private ArrayList<String> mProductListString = new ArrayList<String>();
 
     private String mProductName;
     private String mProductBrand;
@@ -95,7 +94,7 @@ public class SimpleReaderActivity extends BaseScannerActivity implements ZBarSca
 
         mBarcode = rawResult.getContents();
         mBarcodeFormat = rawResult.getBarcodeFormat().toString();
-        url = "http://elodani.tk:5000/scan/annakrisz/proba-barcode-01";
+        url = "http://elodani.tk:5000/scan/annakrisz/" + mBarcode;
 
         getRequest = new JsonObjectRequest
                 (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
@@ -104,12 +103,12 @@ public class SimpleReaderActivity extends BaseScannerActivity implements ZBarSca
                     public void onResponse(JSONObject response) {
                         mProduct = new Product();
                         mProduct.setAmount();
-                        mProduct.setBarcode(mBarcode);
+                        mProduct.setBarcode(response.optString("barcode"));
                         mProduct.setProductName(response.optString("name"));
                         mProduct.setProductBrand(response.optString("brand"));
                         mProduct.setProductType(response.optString("type"));
-                        mProduct.setProductPrice(response.optString("price"));
-                        mProductList.add(mProduct);
+                        mProduct.setProductPrice(response.optString("cost"));
+                        //mProductList.add(mProduct);
                         Toast.makeText(SimpleReaderActivity.this, response.toString(), Toast.LENGTH_SHORT).show();
                         Log.d("Response", response.toString());
                     }
@@ -122,7 +121,6 @@ public class SimpleReaderActivity extends BaseScannerActivity implements ZBarSca
                         Log.d("Error.Response", error.getMessage());
                     }
                 });
-
         queue.add(getRequest);
 
         //FIXME: refresh listview

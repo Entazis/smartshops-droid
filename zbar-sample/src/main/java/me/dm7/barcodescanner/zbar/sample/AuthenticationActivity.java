@@ -1,5 +1,4 @@
 package me.dm7.barcodescanner.zbar.sample;
-import android.app.AlertDialog;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
