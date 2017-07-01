@@ -147,7 +147,6 @@ public class FullScannerActivity extends BaseScannerActivity implements MessageD
             r.play();
         } catch (Exception e) {}
         showMessageDialog("Contents = " + rawResult.getContents() + ", Format = " + rawResult.getBarcodeFormat().getName());
-        //FIXME: user input
         //mProductName = (EditText) findViewById(R.id.)
     }
 

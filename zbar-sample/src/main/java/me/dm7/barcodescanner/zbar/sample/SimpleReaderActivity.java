@@ -31,7 +31,6 @@ import me.dm7.barcodescanner.zbar.ZBarScannerView;
 public class SimpleReaderActivity extends BaseScannerActivity implements ZBarScannerView.ResultHandler {
     private ZBarScannerView mScannerView;
 
-    //FIXME
     private Product mProduct;
     private ArrayList<Product> mProductList = new ArrayList<Product>();;
     private ArrayList<String> mProductListString = new ArrayList<String>();

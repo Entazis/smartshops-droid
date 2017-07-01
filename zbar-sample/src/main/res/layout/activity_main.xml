@@ -25,23 +25,26 @@
 
         <Button android:layout_height="wrap_content"
                 android:layout_width="match_parent"
-                android:text="@string/simple_activity_sample"
+                android:text="SCAN NEW PRODUCT"
                 android:onClick="launchSimpleActivity" />
         <Button android:layout_height="wrap_content"
                 android:layout_width="match_parent"
                 android:text="@string/simple_fragment_sample"
-                android:onClick="launchSimpleFragmentActivity" />
+                android:onClick="launchSimpleFragmentActivity"
+                android:visibility="gone"/>
         <Button android:layout_height="wrap_content"
                 android:layout_width="match_parent"
                 android:text="@string/activity_sample"
-                android:onClick="launchFullActivity" />
+                android:onClick="launchFullActivity"
+                android:visibility="gone"/>
         <Button android:layout_height="wrap_content"
                 android:layout_width="match_parent"
                 android:text="@string/fragment_sample"
-                android:onClick="launchFullFragmentActivity" />
+                android:onClick="launchFullFragmentActivity"
+                android:visibility="gone"/>
         <Button android:layout_height="wrap_content"
                 android:layout_width="match_parent"
-                android:text="@string/simple_reader_activity_sample"
+                android:text="READ BARCODE"
                 android:onClick="launchReaderActivity" />
         <Button
                 android:layout_width="match_parent"
@@ -51,7 +54,7 @@
         <Button
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Product properties"
+                android:text="PRODUCT LIST"
                 android:onClick="launchProductPropertiesActivity"/>
 
     </LinearLayout>

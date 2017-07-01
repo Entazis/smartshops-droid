@@ -112,7 +112,6 @@ public class SimpleScannerActivity extends BaseScannerActivity implements ZBarSc
                                 ", Price = " + mProduct.getProductPrice(), Toast.LENGTH_LONG);
                 toast.show();
 
-                //TODO: url
                 url = "http://elodani.tk:5000/add/annakrisz";
 
                 /*

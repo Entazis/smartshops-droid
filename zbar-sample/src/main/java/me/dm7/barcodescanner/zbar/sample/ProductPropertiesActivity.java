@@ -233,7 +233,6 @@ public class ProductPropertiesActivity extends ListActivity{
     }
 
     public void modifyItem(View v){
-        //TODO dialog: inject clicked product obj, title barcode
         alertproduct.show();
     }
 
