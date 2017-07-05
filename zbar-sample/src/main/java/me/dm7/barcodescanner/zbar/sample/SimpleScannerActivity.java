@@ -64,15 +64,16 @@ public class SimpleScannerActivity extends BaseScannerActivity implements ZBarSc
 
         layout = new LinearLayout(SimpleScannerActivity.this);
         layout.setOrientation(LinearLayout.VERTICAL);
-        final EditText input = new EditText(SimpleScannerActivity.this);
-        input.setInputType(InputType.TYPE_CLASS_TEXT);
-        input.setHint("Product name");
-        layout.addView(input);
 
         final EditText input2 = new EditText(SimpleScannerActivity.this);
         input2.setInputType(InputType.TYPE_CLASS_TEXT);
         input2.setHint("Product brand");
         layout.addView(input2);
+
+        final EditText input = new EditText(SimpleScannerActivity.this);
+        input.setInputType(InputType.TYPE_CLASS_TEXT);
+        input.setHint("Product name");
+        layout.addView(input);
 
         final EditText input3 = new EditText(SimpleScannerActivity.this);
         input3.setInputType(InputType.TYPE_CLASS_TEXT);
@@ -92,8 +93,8 @@ public class SimpleScannerActivity extends BaseScannerActivity implements ZBarSc
         builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                mProductName = input.getText().toString();
                 mProductBrand = input2.getText().toString();
+                mProductName = input.getText().toString();
                 mProductType = input3.getText().toString();
                 mProductPrice = input4.getText().toString();
                 mProduct = new Product();
@@ -105,50 +106,14 @@ public class SimpleScannerActivity extends BaseScannerActivity implements ZBarSc
                 mProduct.setAmount();
                 //mProduct.setBarcode();
                 toast = Toast.makeText(getApplicationContext(),
-                        "Name = " + mProduct.getProductName() +
-                                ", Brand = " + mProduct.getProductBrand() +
+                        "Brand = " + mProduct.getProductBrand() +
+                                ", Name = " + mProduct.getProductName() +
                                 ", Type = " + mProduct.getProductType() +
                                 ", Barcode = " + mProduct.getBarcode() +
                                 ", Price = " + mProduct.getProductPrice(), Toast.LENGTH_LONG);
                 toast.show();
 
                 url = "http://elodani.tk:5000/add/annakrisz";
-
-                /*
-                postObject = new JSONObject();
-                try{
-                    postObject.put("name", mProduct.getProductName());
-                    postObject.put("brand", mProduct.getProductBrand());
-                    postObject.put("type", mProduct.getProductType());
-                    postObject.put("price", mProduct.getProductPrice());
-                    postObject.put("amount", mProduct.getAmount());
-                    postObject.put("barcode", mProduct.getBarcode());
-                } catch(JSONException e){
-                    e.printStackTrace();
-                }
-                */
-/*
-                postRequest = new JsonObjectRequest(Request.Method.POST, url, postObject,
-                        new Response.Listener<JSONObject>()
-                        {
-                            @Override
-                            public void onResponse(JSONObject response) {
-                                // response
-                                Toast.makeText(SimpleScannerActivity.this, response.toString(), Toast.LENGTH_SHORT).show();
-                                Log.d("Response", response.toString());
-                            }
-                        },
-                        new Response.ErrorListener()
-                        {
-                            @Override
-                            public void onErrorResponse(VolleyError error) {
-                                // error
-                                Toast.makeText(SimpleScannerActivity.this, error.toString(), Toast.LENGTH_SHORT).show();
-                                Log.d("Error.Response", error.getMessage());
-                            }
-                        }
-                );
-                queue.add(postRequest);*/
 
                 StringRequest postStringRequest = new StringRequest(Request.Method.POST, url,
                         new Response.Listener<String>()
@@ -187,12 +152,14 @@ public class SimpleScannerActivity extends BaseScannerActivity implements ZBarSc
                 };
                 queue.add(postStringRequest);
                 dialog.dismiss();
+                mScannerView.resumeCameraPreview(SimpleScannerActivity.this);
             }
         });
         builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.cancel();
+                mScannerView.resumeCameraPreview(SimpleScannerActivity.this);
             }
         });
         alertproduct = builder.create();
@@ -239,7 +206,7 @@ public class SimpleScannerActivity extends BaseScannerActivity implements ZBarSc
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                mScannerView.resumeCameraPreview(SimpleScannerActivity.this);
+               // mScannerView.resumeCameraPreview(SimpleScannerActivity.this);
             }
         }, 2000);
     }

@@ -28,6 +28,8 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -38,6 +40,7 @@ import java.util.Map;
 public class ProductPropertiesActivity extends ListActivity{
 
     LinearLayout layout;
+    AlertDialog alertproduct;
     AlertDialog.Builder builder;
 
     ArrayList<Product> listItems=new ArrayList<Product>();
@@ -48,21 +51,20 @@ public class ProductPropertiesActivity extends ListActivity{
     JsonObjectRequest getRequest;
     JsonObjectRequest putRequest;
     StringRequest putStringRequest;
-    JSONObject putObject;
     JSONArray jArray;
     JSONObject jObject;
     RequestQueue queue;
     String urlget;
     String urlput;
-    AlertDialog alertproduct;
 
     Product mProduct;
     String mProductBarcode;
+    String mProductBrand;
+    String mProductName;
+    String mProductType;
+    String mProductPrice;
     int tempint=1;
     String tempstr="Product";
-
-    //RECORDING HOW MANY TIMES THE BUTTON HAS BEEN CLICKED
-    int clickCounter=0;
 
     ListView listView;
 
@@ -78,8 +80,10 @@ public class ProductPropertiesActivity extends ListActivity{
         adapter2=new ArrayAdapter<String>(this,
                 android.R.layout.simple_list_item_1,
                 listItemsName);
+
         //setListAdapter(adapter);
         setListAdapter(adapter2);
+
 
         queue = Volley.newRequestQueue(this);
 
@@ -89,18 +93,18 @@ public class ProductPropertiesActivity extends ListActivity{
         //Get products from the server
         getProducts();
 
-        //TODO input fields fill with starting values
         layout = new LinearLayout(ProductPropertiesActivity.this);
         layout.setOrientation(LinearLayout.VERTICAL);
-        final EditText input = new EditText(ProductPropertiesActivity.this);
-        input.setInputType(InputType.TYPE_CLASS_TEXT);
-        input.setHint("Product name");
-        layout.addView(input);
 
         final EditText input2 = new EditText(ProductPropertiesActivity.this);
         input2.setInputType(InputType.TYPE_CLASS_TEXT);
         input2.setHint("Product brand");
         layout.addView(input2);
+
+        final EditText input = new EditText(ProductPropertiesActivity.this);
+        input.setInputType(InputType.TYPE_CLASS_TEXT);
+        input.setHint("Product name");
+        layout.addView(input);
 
         final EditText input3 = new EditText(ProductPropertiesActivity.this);
         input3.setInputType(InputType.TYPE_CLASS_TEXT);
@@ -113,7 +117,6 @@ public class ProductPropertiesActivity extends ListActivity{
         layout.addView(input4);
 
         builder = new AlertDialog.Builder(ProductPropertiesActivity.this);
-        builder.setTitle("Product Modifier");
 
         builder.setView(layout);
 
@@ -131,55 +134,21 @@ public class ProductPropertiesActivity extends ListActivity{
                                 ", Type = " + mProduct.getProductType() +
                                 ", Barcode = " + mProduct.getBarcode() +
                                 ", Price = " + mProduct.getProductPrice(), Toast.LENGTH_LONG).show();
-/*
-                putObject = new JSONObject();
-                try{
-                    putObject.put("name", mProduct.getProductName());
-                    putObject.put("brand", mProduct.getProductBrand());
-                    putObject.put("type", mProduct.getProductType());
-                    putObject.put("price", mProduct.getProductPrice());
-                    putObject.put("amount", mProduct.getAmount());
-                    putObject.put("barcode", mProduct.getBarcode());
-                } catch(JSONException e){
-                    e.printStackTrace();
-                }
 
-                putRequest = new JsonObjectRequest
-                        (Request.Method.PUT, url, putObject, new Response.Listener<JSONObject>()
-                        {
-                            @Override
-                            public void onResponse(JSONObject response) {
-                                // response
-                                Log.d("Response", response.toString());
-                            }
-                        },
-                        new Response.ErrorListener()
-                        {
-                            @Override
-                            public void onErrorResponse(VolleyError error) {
-                                // error
-                                Log.d("Error.Response", error.getMessage());
-                            }
-                        }
-                );
-                queue.add(putRequest);
-*/
                 putStringRequest = new StringRequest(Request.Method.PUT, urlput,
                         new Response.Listener<String>()
                         {
                             @Override
                             public void onResponse(String response) {
-                                // response
                                 Log.d("Response", response);
                                 Toast.makeText(ProductPropertiesActivity.this, response, Toast.LENGTH_SHORT).show();
-                                //refresh listview
+                                getProducts();
                             }
                         },
                         new Response.ErrorListener()
                         {
                             @Override
                             public void onErrorResponse(VolleyError error) {
-                                // error
                                 Toast.makeText(ProductPropertiesActivity.this, error.toString(), Toast.LENGTH_SHORT).show();
                                 error.printStackTrace();
                                 int ec = error.networkResponse.statusCode;
@@ -215,7 +184,7 @@ public class ProductPropertiesActivity extends ListActivity{
             }
         });
 
-        alertproduct = builder.create();
+        //alertproduct = builder.create();
 
         listView = (ListView)findViewById(android.R.id.list);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -226,6 +195,29 @@ public class ProductPropertiesActivity extends ListActivity{
                         "Click ListItem Number " + position, Toast.LENGTH_LONG)
                         .show();
                 mProductBarcode = listItems.get(position).getBarcode();
+                mProductBrand = listItems.get(position).getProductBrand();
+                mProductName = listItems.get(position). getProductName();
+                mProductType = listItems.get(position).getProductType();
+                mProductPrice = listItems.get(position).getProductPrice();
+
+                layout.removeAllViewsInLayout();
+                layout = new LinearLayout(ProductPropertiesActivity.this);
+                layout.setOrientation(LinearLayout.VERTICAL);
+
+                input2.setText(mProductBrand);
+                input.setText(mProductName);
+                input3.setText(mProductType);
+                input4.setText(mProductPrice);
+
+                layout.addView(input2);
+                layout.addView(input);
+                layout.addView(input3);
+                layout.addView(input4);
+
+                builder.setTitle(mProductBrand + " - " + mProductName + " " + mProductType);
+                builder.setView(layout);
+
+                alertproduct = builder.create();
                 alertproduct.show();
             }
         });
@@ -275,9 +267,12 @@ public class ProductPropertiesActivity extends ListActivity{
                             mProduct.setProductType(jObject.optString("type"));
                             mProduct.setProductPrice(jObject.optString("cost"));
                             listItems.add(mProduct);
-                            listItemsName.add(mProduct.getProductName() + ": " + mProduct.getProductPrice());
+                            listItemsName.add(mProduct.getProductBrand() + " - " + mProduct.getProductName() + " " +
+                                    mProduct.getProductType() +
+                                    ": " + mProduct.getProductPrice() + " Ft");
                         }
-                        Toast.makeText(ProductPropertiesActivity.this, response.toString(), Toast.LENGTH_SHORT).show();
+                        Collections.sort(listItems, new ProductCompare());
+                        Collections.sort(listItemsName);
                         adapter2.notifyDataSetChanged();
                         Log.d("Response", response.toString());
                     }

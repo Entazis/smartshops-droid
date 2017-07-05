@@ -1,5 +1,7 @@
 package me.dm7.barcodescanner.zbar.sample;
 
+import java.util.Comparator;
+
 /**
  * Created by Entazis on 2017. 06. 08..
  */
@@ -66,5 +68,23 @@ public class Product {
     }
     public int getAmount(){
         return Amount;
+    }
+}
+
+class ProductCompare implements Comparator<Product> {
+
+    @Override
+    public int compare(Product o1, Product o2) {
+        // write comparison logic here like below , it's just a sample
+        if(o1.getProductBrand().equals(o2.getProductBrand())){
+            if (o1.getProductName().equals(o2.getProductName())){
+                if(o1.getProductType().equals(o2.getProductType())){
+                    return o1.getProductType().compareTo(o2.getProductType());
+                }
+                else return o1.getProductType().compareTo(o2.getProductType());
+            }
+            else return o1.getProductName().compareTo(o2.getProductName());
+        }
+        else return o1.getProductBrand().compareTo(o2.getProductBrand());
     }
 }
