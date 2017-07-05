@@ -1,5 +1,6 @@
 package me.dm7.barcodescanner.zbar.sample;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -34,6 +35,8 @@ public class SimpleReaderActivity extends BaseScannerActivity implements ZBarSca
     private Product mProduct;
     private ArrayList<Product> mProductList = new ArrayList<Product>();;
     private ArrayList<String> mProductListString = new ArrayList<String>();
+    TextView productTextView;
+    private String productListString;
 
     private String mProductName;
     private String mProductBrand;
@@ -49,19 +52,19 @@ public class SimpleReaderActivity extends BaseScannerActivity implements ZBarSca
     StringRequest stringRequest;
     RequestQueue queue;
     String url;
-    TextView productListView;
-
 
     @Override
     public void onCreate(Bundle state) {
         super.onCreate(state);
-        setContentView(R.layout.activity_scaling_scanner);
+        setContentView(R.layout.activity_scaling_scanner_reader);
         setupToolbar();
         ViewGroup contentFrame = (ViewGroup) findViewById(R.id.content_frame);
         mScannerView = new ZBarScannerView(this);
         contentFrame.addView(mScannerView);
 
-        productListView = (TextView) findViewById(R.id.product_list);
+        productTextView = (TextView) findViewById(R.id.product_list);
+        productTextView.setText("Placeholder");
+        productTextView.setTextColor(Color.YELLOW);
 
         queue = Volley.newRequestQueue(this);
         url = "http://elodani.tk:5000/demo";
@@ -107,8 +110,10 @@ public class SimpleReaderActivity extends BaseScannerActivity implements ZBarSca
                         mProduct.setProductBrand(response.optString("brand"));
                         mProduct.setProductType(response.optString("type"));
                         mProduct.setProductPrice(response.optString("cost"));
-                        //mProductList.add(mProduct);
-                        Toast.makeText(SimpleReaderActivity.this, response.toString(), Toast.LENGTH_SHORT).show();
+                        mProductList.add(mProduct);
+
+                        refreshListView();
+                        //Toast.makeText(SimpleReaderActivity.this, response.toString(), Toast.LENGTH_SHORT).show();
                         Log.d("Response", response.toString());
                     }
                 }, new Response.ErrorListener() {
@@ -143,16 +148,24 @@ public class SimpleReaderActivity extends BaseScannerActivity implements ZBarSca
     }
 
     public void clearReader(View v){
-        mProductList = null;
+        //mProductList = null;
+        mProductList.clear();
+        refreshListView();
     }
 
-    public void refreshListview(){
-        if(mProductList.isEmpty()){
-            //productListView.setText();
+    public void refreshListView(){
+        productTextView.setText("");
+        if(!mProductList.isEmpty()){
+            double sum = 0;
+            for(Product product: mProductList){
+                mProductBrand = product.getProductBrand();
+                mProductName = product.getProductName();
+                mProductType = product.getProductType();
+                mProductPrice = product.getProductPrice();
+                productTextView.append(mProductBrand + " " + mProductName + " " + mProductType + ": " + mProductPrice + "\n");
+                sum += Double.parseDouble(mProductPrice);
+            }
+            productTextView.append("Sum: " + sum);
         }
-        else{
-            //productListView.append();
-        }
-
     }
 }

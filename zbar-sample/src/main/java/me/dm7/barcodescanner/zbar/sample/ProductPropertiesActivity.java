@@ -63,8 +63,6 @@ public class ProductPropertiesActivity extends ListActivity{
     String mProductName;
     String mProductType;
     String mProductPrice;
-    int tempint=1;
-    String tempstr="Product";
 
     ListView listView;
 
@@ -228,20 +226,6 @@ public class ProductPropertiesActivity extends ListActivity{
         alertproduct.show();
     }
 
-    public void addItems(View v) {
-        mProduct = new Product();
-        mProduct.setProductName("ProductNr"+tempint);
-        mProduct.setProductBrand("ProductBrand");
-        mProduct.setProductType("ProductType");
-        mProduct.setProductPrice("Price: "+tempint*123);
-        listItems.add(mProduct);
-        adapter.notifyDataSetChanged();
-
-        tempstr = new String("ProductNr"+ tempint++ + ": " + tempint*123);
-        listItemsName.add(tempstr);
-        adapter2.notifyDataSetChanged();
-    }
-
     public void setupToolbar() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         //setSupportActionBar(toolbar);
@@ -249,7 +233,6 @@ public class ProductPropertiesActivity extends ListActivity{
 
     public void getProducts(){
         listItems.clear();
-        listItemsName.clear();
 
         getRequest = new JsonObjectRequest
                 (Request.Method.GET, urlget, null, new Response.Listener<JSONObject>() {
@@ -267,12 +250,10 @@ public class ProductPropertiesActivity extends ListActivity{
                             mProduct.setProductType(jObject.optString("type"));
                             mProduct.setProductPrice(jObject.optString("cost"));
                             listItems.add(mProduct);
-                            listItemsName.add(mProduct.getProductBrand() + " - " + mProduct.getProductName() + " " +
-                                    mProduct.getProductType() +
-                                    ": " + mProduct.getProductPrice() + " Ft");
                         }
                         Collections.sort(listItems, new ProductCompare());
-                        Collections.sort(listItemsName);
+                        refreshItemNames();
+
                         adapter2.notifyDataSetChanged();
                         Log.d("Response", response.toString());
                     }
@@ -286,5 +267,19 @@ public class ProductPropertiesActivity extends ListActivity{
                     }
                 });
         queue.add(getRequest);
+    }
+
+    public void refreshItemNames(){
+
+        listItemsName.clear();
+        for(Product product: listItems){
+            mProductBrand = product.getProductBrand();
+            mProductName = product.getProductName();
+            mProductType = product.getProductType();
+            mProductPrice = product.getProductPrice();
+
+            listItemsName.add(mProductBrand + " - " + mProductName + " " + mProductType + ": " + mProductPrice + " Ft");
+        }
+
     }
 }

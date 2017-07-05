@@ -215,4 +215,5 @@ public class SimpleScannerActivity extends BaseScannerActivity implements ZBarSc
         mFlash = !mFlash;
         mScannerView.setFlash(mFlash);
     }
+
 }
