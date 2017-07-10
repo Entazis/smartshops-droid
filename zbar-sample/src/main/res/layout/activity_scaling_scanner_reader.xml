@@ -37,11 +37,30 @@
             android:orientation="horizontal"
             android:weightSum="1">
 
-            <TextView
-                android:id="@+id/product_list"
-                android:layout_width="299dp"
+            <LinearLayout
+                android:layout_width="300dp"
                 android:layout_height="match_parent"
-                android:gravity="left" />
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/product_list1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="left" />
+                <TextView
+                    android:id="@+id/product_list2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="left" />
+                <TextView
+                    android:id="@+id/product_list3"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="left" />
+
+            </LinearLayout>
+
+
 
             <LinearLayout
                 android:layout_width="match_parent"

@@ -13,6 +13,7 @@ public class Product {
     private String Barcode;
     private String BarcodeFormat;
     private String ProductPrice;
+    private String Afa;
     private int Amount;
 
     public void setProductName(String name){
@@ -58,6 +59,13 @@ public class Product {
     }
     public String getProductPrice(){
         return ProductPrice;
+    }
+
+    public void setProductAfa(String afa){
+        Afa = afa;
+    }
+    public String getProductAfa(){
+        return Afa;
     }
 
     public void setAmount(int amount){

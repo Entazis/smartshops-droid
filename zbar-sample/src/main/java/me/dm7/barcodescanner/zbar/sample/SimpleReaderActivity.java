@@ -35,7 +35,9 @@ public class SimpleReaderActivity extends BaseScannerActivity implements ZBarSca
     private Product mProduct;
     private ArrayList<Product> mProductList = new ArrayList<Product>();;
     private ArrayList<String> mProductListString = new ArrayList<String>();
-    TextView productTextView;
+    TextView productTextView1;
+    TextView productTextView2;
+    TextView productTextView3;
     private String productListString;
 
     private String mProductName;
@@ -44,6 +46,7 @@ public class SimpleReaderActivity extends BaseScannerActivity implements ZBarSca
     private String mBarcode;
     private String mBarcodeFormat;
     private String mProductPrice;
+    private String mProductAfa;
     private int mProductAmount;
 
     private static final String FLASH_STATE = "FLASH_STATE";
@@ -62,9 +65,15 @@ public class SimpleReaderActivity extends BaseScannerActivity implements ZBarSca
         mScannerView = new ZBarScannerView(this);
         contentFrame.addView(mScannerView);
 
-        productTextView = (TextView) findViewById(R.id.product_list);
-        productTextView.setText("Placeholder");
-        productTextView.setTextColor(Color.YELLOW);
+        productTextView1 = (TextView) findViewById(R.id.product_list1);
+        productTextView1.setText("Placeholder");
+        productTextView1.setTextColor(Color.RED);
+        productTextView2 = (TextView) findViewById(R.id.product_list2);
+        productTextView2.setText("Placeholder");
+        productTextView2.setTextColor(Color.YELLOW);
+        productTextView3 = (TextView) findViewById(R.id.product_list3);
+        productTextView3.setText("Placeholder");
+        productTextView3.setTextColor(Color.GREEN);
 
         queue = Volley.newRequestQueue(this);
         url = "http://elodani.tk:5000/demo";
@@ -110,6 +119,7 @@ public class SimpleReaderActivity extends BaseScannerActivity implements ZBarSca
                         mProduct.setProductBrand(response.optString("brand"));
                         mProduct.setProductType(response.optString("type"));
                         mProduct.setProductPrice(response.optString("cost"));
+                        mProduct.setProductAfa(response.optString("afa"));
                         mProductList.add(mProduct);
 
                         refreshListView();
@@ -154,18 +164,37 @@ public class SimpleReaderActivity extends BaseScannerActivity implements ZBarSca
     }
 
     public void refreshListView(){
-        productTextView.setText("");
+        //TODO group by afa
+        productTextView1.setText("");
+        productTextView2.setText("");
+        productTextView3.setText("");
         if(!mProductList.isEmpty()){
-            double sum = 0;
+            double sum27 = 0;
+            double sum18 = 0;
+            double sum5 = 0;
             for(Product product: mProductList){
                 mProductBrand = product.getProductBrand();
                 mProductName = product.getProductName();
                 mProductType = product.getProductType();
                 mProductPrice = product.getProductPrice();
-                productTextView.append(mProductBrand + " " + mProductName + " " + mProductType + ": " + mProductPrice + "\n");
-                sum += Double.parseDouble(mProductPrice);
+                mProductAfa = product.getProductAfa();
+
+                switch (mProductAfa){
+                    case "1":
+                        productTextView1.append(mProductBrand + " " + mProductName + " " + mProductType + ": " + mProductPrice + "\n");
+                        sum27 += Double.parseDouble(mProductPrice);
+                        break;
+                    case "2":
+                        productTextView2.append(mProductBrand + " " + mProductName + " " + mProductType + ": " + mProductPrice + "\n");
+                        sum18 += Double.parseDouble(mProductPrice);
+                        break;
+                    case "3":
+                        productTextView3.append(mProductBrand + " " + mProductName + " " + mProductType + ": " + mProductPrice + "\n");
+                        sum5 += Double.parseDouble(mProductPrice);
+                        break;
+                }
             }
-            productTextView.append("Sum: " + sum);
+            productTextView3.append("27% sum: " + sum27 + "\n18% sum: " + sum18 + "\n5% sum: " + sum5);
         }
     }
 }

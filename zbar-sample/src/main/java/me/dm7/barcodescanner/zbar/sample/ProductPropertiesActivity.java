@@ -13,6 +13,8 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -63,6 +65,7 @@ public class ProductPropertiesActivity extends ListActivity{
     String mProductName;
     String mProductType;
     String mProductPrice;
+    String mProductAfa;
 
     ListView listView;
 
@@ -114,6 +117,19 @@ public class ProductPropertiesActivity extends ListActivity{
         input4.setHint("Product price");
         layout.addView(input4);
 
+        final RadioGroup rdGroup = new RadioGroup(ProductPropertiesActivity.this);
+        rdGroup.setOrientation(RadioGroup.HORIZONTAL);
+        final RadioButton rdBtn1 = new RadioButton(ProductPropertiesActivity.this);
+        rdBtn1.setText("27%");
+        rdGroup.addView(rdBtn1);
+        final RadioButton rdBtn2 = new RadioButton(ProductPropertiesActivity.this);
+        rdBtn2.setText("18%");
+        rdGroup.addView(rdBtn2);
+        final RadioButton rdBtn3 = new RadioButton(ProductPropertiesActivity.this);
+        rdBtn3.setText("5%");
+        rdGroup.addView(rdBtn3);
+        layout.addView(rdGroup);
+
         builder = new AlertDialog.Builder(ProductPropertiesActivity.this);
 
         builder.setView(layout);
@@ -126,12 +142,14 @@ public class ProductPropertiesActivity extends ListActivity{
                 mProduct.setProductType(input3.getText().toString());
                 mProduct.setProductPrice(input4.getText().toString());
                 mProduct.setBarcode(mProductBarcode);
+                mProduct.setProductAfa(String.valueOf(rdGroup.getCheckedRadioButtonId()));
                 Toast.makeText(getApplicationContext(),
                         "Name = " + mProduct.getProductName() +
                                 ", Brand = " + mProduct.getProductBrand() +
                                 ", Type = " + mProduct.getProductType() +
                                 ", Barcode = " + mProduct.getBarcode() +
-                                ", Price = " + mProduct.getProductPrice(), Toast.LENGTH_LONG).show();
+                                ", Price = " + mProduct.getProductPrice() +
+                                ", Afa = " + mProduct.getProductAfa(), Toast.LENGTH_LONG).show();
 
                 putStringRequest = new StringRequest(Request.Method.PUT, urlput,
                         new Response.Listener<String>()
@@ -165,6 +183,7 @@ public class ProductPropertiesActivity extends ListActivity{
                         params.put("brand", mProduct.getProductBrand());
                         params.put("cost", mProduct.getProductPrice());
                         params.put("type", mProduct.getProductType());
+                        params.put("afa", mProduct.getProductAfa());
                         params.put("user", "1");
 
                         return params;
@@ -197,6 +216,7 @@ public class ProductPropertiesActivity extends ListActivity{
                 mProductName = listItems.get(position). getProductName();
                 mProductType = listItems.get(position).getProductType();
                 mProductPrice = listItems.get(position).getProductPrice();
+                mProductAfa = listItems.get(position).getProductAfa();
 
                 layout.removeAllViewsInLayout();
                 layout = new LinearLayout(ProductPropertiesActivity.this);
@@ -206,11 +226,13 @@ public class ProductPropertiesActivity extends ListActivity{
                 input.setText(mProductName);
                 input3.setText(mProductType);
                 input4.setText(mProductPrice);
+                rdGroup.check(Integer.parseInt(mProductAfa));
 
                 layout.addView(input2);
                 layout.addView(input);
                 layout.addView(input3);
                 layout.addView(input4);
+                layout.addView(rdGroup);
 
                 builder.setTitle(mProductBrand + " - " + mProductName + " " + mProductType);
                 builder.setView(layout);
@@ -249,6 +271,7 @@ public class ProductPropertiesActivity extends ListActivity{
                             mProduct.setProductBrand(jObject.optString("brand"));
                             mProduct.setProductType(jObject.optString("type"));
                             mProduct.setProductPrice(jObject.optString("cost"));
+                            mProduct.setProductAfa(jObject.optString("afa"));
                             listItems.add(mProduct);
                         }
                         Collections.sort(listItems, new ProductCompare());

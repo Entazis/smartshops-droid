@@ -10,6 +10,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -36,6 +38,7 @@ public class SimpleScannerActivity extends BaseScannerActivity implements ZBarSc
     public String mBarcode;
     public String mBarcodeFormat;
     public String mProductPrice;
+    public String mAfa;
     public Product mProduct;
     public static final String FLASH_STATE = "FLASH_STATE";
     public boolean mFlash;
@@ -85,6 +88,19 @@ public class SimpleScannerActivity extends BaseScannerActivity implements ZBarSc
         input4.setHint("Product price");
         layout.addView(input4);
 
+        final RadioGroup rdGroup = new RadioGroup(SimpleScannerActivity.this);
+        rdGroup.setOrientation(RadioGroup.HORIZONTAL);
+        final RadioButton rdBtn1 = new RadioButton(SimpleScannerActivity.this);
+        rdBtn1.setText("27%");
+        rdGroup.addView(rdBtn1);
+        final RadioButton rdBtn2 = new RadioButton(SimpleScannerActivity.this);
+        rdBtn2.setText("18%");
+        rdGroup.addView(rdBtn2);
+        final RadioButton rdBtn3 = new RadioButton(SimpleScannerActivity.this);
+        rdBtn3.setText("5%");
+        rdGroup.addView(rdBtn3);
+        layout.addView(rdGroup);
+
         builder = new AlertDialog.Builder(SimpleScannerActivity.this);
         builder.setTitle("Product Creator");
 
@@ -97,12 +113,15 @@ public class SimpleScannerActivity extends BaseScannerActivity implements ZBarSc
                 mProductName = input.getText().toString();
                 mProductType = input3.getText().toString();
                 mProductPrice = input4.getText().toString();
+                mAfa = String.valueOf(rdGroup.getCheckedRadioButtonId());
+
                 mProduct = new Product();
                 mProduct.setBarcode(mBarcode);
                 mProduct.setProductName(mProductName);
                 mProduct.setProductBrand(mProductBrand);
                 mProduct.setProductType(mProductType);
                 mProduct.setProductPrice(mProductPrice);
+                mProduct.setProductAfa(mAfa);
                 mProduct.setAmount();
                 //mProduct.setBarcode();
                 toast = Toast.makeText(getApplicationContext(),
@@ -110,7 +129,8 @@ public class SimpleScannerActivity extends BaseScannerActivity implements ZBarSc
                                 ", Name = " + mProduct.getProductName() +
                                 ", Type = " + mProduct.getProductType() +
                                 ", Barcode = " + mProduct.getBarcode() +
-                                ", Price = " + mProduct.getProductPrice(), Toast.LENGTH_LONG);
+                                ", Price = " + mProduct.getProductPrice() +
+                                ", Afa = " + mProduct.getProductAfa(), Toast.LENGTH_LONG);
                 toast.show();
 
                 url = "http://elodani.tk:5000/add/annakrisz";
@@ -145,6 +165,7 @@ public class SimpleScannerActivity extends BaseScannerActivity implements ZBarSc
                         params.put("brand", mProduct.getProductBrand());
                         params.put("cost", mProduct.getProductPrice());
                         params.put("type", mProduct.getProductType());
+                        params.put("afa", mProduct.getProductAfa());
                         params.put("user", "1");
 
                         return params;
